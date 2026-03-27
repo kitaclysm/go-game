@@ -16,3 +16,6 @@ class ChipNode:
         self.coordx = coordx
         self.coordy = coordy
         self.neighbors = neighbors
+
+    def __repr__(self):
+        return f"ChipNode({self.chip_type}, {self.coordx}, {self.coordy}, {self.neighbors})"
