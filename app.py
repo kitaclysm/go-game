@@ -21,11 +21,18 @@ for i in range(1, 20):
 	canvas.create_line(30, imult, 570, imult)
 	# vertical
 	canvas.create_line(imult, 30, imult, 570)
-	print(f"imult: {imult}")
+	
 	x_coords.extend([imult])
 	y_coords.extend([imult])
 
 coords = [x_coords, y_coords]
 print(coords)
+
+def handle_click(event):
+	col = event.x
+	row = event.y
+	print(f"Clicked at {event.x}, {event.y}")
+
+canvas.bind("<Button-1>", handle_click)
 
 root.mainloop()
