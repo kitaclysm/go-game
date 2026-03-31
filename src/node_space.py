@@ -6,7 +6,7 @@ class SpaceType(Enum):
     EMPTY = "empty"
 
 class SpaceNode:
-    def __init__(self, row, col)
+    def __init__(self, row, col):
         self.state = SpaceType.EMPTY
         self.row = row
         self.col = col
@@ -14,3 +14,7 @@ class SpaceNode:
 
     def __repr__(self):
         return f"SpaceNode({self.state}, {self.row}, {self.col}, {self.neighbors})"
+    
+    def count_liberties(self):
+        return (n for n in self.neighbors if n.state == SpaceType.EMPTY)
+    
