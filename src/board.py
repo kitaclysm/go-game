@@ -6,14 +6,26 @@ canvas_size = 600
 
 root = tk.Tk()
 
+# create window
 root.title("Go")
 root.configure(background="green")
 root.minsize(800, 800)
 root.maxsize(1200,1200)
 root.geometry("800x800+50+50")
 
+# create board centered in window
 canvas = Canvas(root, width=canvas_size, height=canvas_size)
 canvas.place(relx=0.5, rely=0.5, anchor='center')
+
+# create chip indicator
+chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4))
+canvas.itemconfig(chip_hoverer, state='hidden')
+
+def enter_board(event):
+    canvas.itemconfig(chip_hoverer, state='normal')
+
+def leave_board(event):
+    canvas.itemconfig(chip_hoverer, state='hidden')
 
 def round_rectangle(canvas, x1, y1, x2, y2, radius=2, **kwargs):
     points = [
@@ -39,25 +51,15 @@ for i in range(1, 20):
 	# vertical
 	canvas.create_line(imult, grid_size, imult, (canvas_size - grid_size))
 
-def create_hoverer(event):
+def handle_motion(event):
     snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
     x1 = snapped_x - ((grid_size / 2) - 4)
     x2 = snapped_x + ((grid_size / 2) - 4)
     snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
     y1 = snapped_y - ((grid_size / 2) - 4)
     y2 = snapped_y + ((grid_size / 2) - 4)
-    # hoverer = round_rectangle(canvas, x1, y1, x2, y2, fill='yellow')
-    hoverer = canvas.create_oval(x1, y1, x2, y2, fill ='yellow')
-
-def handle_hover(event):
-    snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
-    x1 = snapped_x - ((grid_size / 2) - 4)
-    x2 = snapped_x + ((grid_size / 2) - 4)
-    snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
-    y1 = snapped_y - ((grid_size / 2) - 4)
-    y2 = snapped_y + ((grid_size / 2) - 4)
-    canvas.coords(create_hoverer(event), x1, y1, x2, y2)
-    print(f"snapped_x: {snapped_x}, snapped_y: {snapped_y}")
+    canvas.coords(chip_hoverer, x1, y1, x2, y2)
+    # print(f"snapped_x: {snapped_x}, snapped_y: {snapped_y}")
 
 def handle_click(event):
 	col = event.x
@@ -65,5 +67,6 @@ def handle_click(event):
 	print(f"Clicked at {event.x}, {event.y}")
 
 canvas.bind('<Button-1>', handle_click)
-canvas.bind('<Enter>', create_hoverer)
-canvas.bind('<Motion>', handle_hover)
+canvas.bind('<Enter>', enter_board)
+canvas.bind('<Leave>', leave_board)
+canvas.bind('<Motion>', handle_motion)
