@@ -16,40 +16,26 @@ root.geometry("800x800+50+50")
 # create board centered in window
 canvas = Canvas(root, width=canvas_size, height=canvas_size)
 canvas.place(relx=0.5, rely=0.5, anchor='center')
-
-# create chip indicator
-chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4))
-canvas.itemconfig(chip_hoverer, state='hidden')
-
-def enter_board(event):
-    canvas.itemconfig(chip_hoverer, state='normal')
-
-def leave_board(event):
-    canvas.itemconfig(chip_hoverer, state='hidden')
-
-def round_rectangle(canvas, x1, y1, x2, y2, radius=2, **kwargs):
-    points = [
-        x1+radius, y1,
-        x2-radius, y1,
-        # x2, y1,
-        x2, y1+radius,
-        x2, y2-radius,
-        # x2, y2,
-        # x2-radius, y2,
-        x1+radius, y2,
-        # x1, y2,
-        x1, y2-radius,
-        x1, y1+radius,
-        # x1, y1
-    ]
-    return canvas.create_polygon(points, **kwargs, smooth=True)
-
+# add grid lines
 for i in range(1, 20):
 	imult = grid_size*i
 	# horizontal
 	canvas.create_line(grid_size, imult, (canvas_size - grid_size), imult)
 	# vertical
 	canvas.create_line(imult, grid_size, imult, (canvas_size - grid_size))
+
+# create chip indicator and hide
+chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4))
+# alternate chip indicator, rounded circle instead of oval
+# chip_hoverer = canvas.create_polygon([2, 0, 8, 0, 10, 2, 10, 8, 8, 10, 2, 10, 0, 8, 0, 2], smooth=True)
+canvas.itemconfig(chip_hoverer, state='hidden')
+
+def show_chip_placer(event):
+    canvas.itemconfig(chip_hoverer, state='normal')
+
+def hide_chip_placer(event):
+    canvas.itemconfig(chip_hoverer, state='hidden')
+
 
 def handle_motion(event):
     snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
@@ -58,7 +44,8 @@ def handle_motion(event):
     snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
     y1 = snapped_y - ((grid_size / 2) - 4)
     y2 = snapped_y + ((grid_size / 2) - 4)
-    canvas.coords(chip_hoverer, x1, y1, x2, y2)
+    if event.x >= 15 and event.x <= 585 and event.y >= 15 and event.y <= 585:
+        canvas.coords(chip_hoverer, x1, y1, x2, y2)
     # print(f"snapped_x: {snapped_x}, snapped_y: {snapped_y}")
 
 def handle_click(event):
@@ -67,6 +54,6 @@ def handle_click(event):
 	print(f"Clicked at {event.x}, {event.y}")
 
 canvas.bind('<Button-1>', handle_click)
-canvas.bind('<Enter>', enter_board)
-canvas.bind('<Leave>', leave_board)
+canvas.bind('<Enter>', show_chip_placer)
+canvas.bind('<Leave>', hide_chip_placer)
 canvas.bind('<Motion>', handle_motion)
