@@ -29,7 +29,7 @@ for r in range(19):
 	canvas.create_line(grid_size * (r + 1), grid_size, grid_size * (r + 1), canvas_size - grid_size, fill='green')
 
 # create chip indicator and hide
-chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4), fill='pink')
+chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4), outline='pink', width=4)
 # alternate chip indicator, rounded circle instead of oval
 # chip_hoverer = canvas.create_polygon([2, 0, 8, 0, 10, 2, 10, 8, 8, 10, 2, 10, 0, 8, 0, 2], smooth=True)
 canvas.itemconfig(chip_hoverer, state='hidden')
@@ -81,6 +81,7 @@ def handle_click(event):
 	col = int(snapped_x // 30)
 	row = int(snapped_y // 30)
 	print(f"Clicked at col: {col}, row: {row}")
+	return (col, row)
 
 canvas.bind('<Button-1>', handle_click)
 # canvas.bind('<Enter>', show_chip_placer)
