@@ -17,22 +17,19 @@ root.geometry("800x800+50+50")
 # create board centered in window
 canvas = Canvas(root, width=canvas_size, height=canvas_size)
 canvas.place(relx=0.5, rely=0.5, anchor='center')
-# add grid lines
-for i in range(1, 20):
-	imult = grid_size*i
-	# horizontal
-	canvas.create_line(grid_size, imult, (canvas_size - grid_size), imult)
-	# vertical
-	canvas.create_line(imult, grid_size, imult, (canvas_size - grid_size))
 
-# create space_nodes
+# create space_nodes and grid lines
 spaces = [[None for c in range(19)] for r in range(19)]
 for r in range(19):
     for c in range(19):
         spaces[r][c] = SpaceNode(row=r, col=c)
+    # horizontal
+    canvas.create_line(grid_size, grid_size * (r + 1), canvas_size - grid_size, grid_size * (r + 1), fill='red')
+    # vertical
+    canvas.create_line(grid_size * (r + 1), grid_size, grid_size * (r + 1), canvas_size - grid_size, fill='green')
 
 # create chip indicator and hide
-chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4))
+chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4), fill='pink')
 # alternate chip indicator, rounded circle instead of oval
 # chip_hoverer = canvas.create_polygon([2, 0, 8, 0, 10, 2, 10, 8, 8, 10, 2, 10, 0, 8, 0, 2], smooth=True)
 canvas.itemconfig(chip_hoverer, state='hidden')
@@ -44,6 +41,7 @@ def hide_chip_placer(event):
     canvas.itemconfig(chip_hoverer, state='hidden')
 
 def handle_motion(event):
+    # if statements prevent hoverer from snapping to spaces outside the grid
     if event.x < 30:
         snapped_x = 30
     elif event.x > 570:
