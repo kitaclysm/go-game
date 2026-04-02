@@ -44,14 +44,21 @@ def hide_chip_placer(event):
     canvas.itemconfig(chip_hoverer, state='hidden')
 
 def handle_motion(event):
-    if event.x < 15 or event.x > 585 or event.y < 15 or event.y > 585:
-        hide_chip_placer(event)
+    if event.x < 30:
+        snapped_x = 30
+    elif event.x > 570:
+        snapped_x = 570
     else:
-        show_chip_placer(event)
-    snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
+        snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
+    if event.y < 30:
+        snapped_y = 30
+    elif event.y > 570:
+        snapped_y = 570
+    else:
+        snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
+    show_chip_placer(event)
     x1 = snapped_x - ((grid_size / 2) - 4)
     x2 = snapped_x + ((grid_size / 2) - 4)
-    snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
     y1 = snapped_y - ((grid_size / 2) - 4)
     y2 = snapped_y + ((grid_size / 2) - 4)
     canvas.coords(chip_hoverer, x1, y1, x2, y2)
