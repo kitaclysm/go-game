@@ -18,7 +18,7 @@ root.geometry("800x800+50+50")
 canvas = Canvas(root, width=canvas_size, height=canvas_size)
 canvas.place(relx=0.5, rely=0.5, anchor='center')
 
-# create space_nodes and grid lines
+# create space_nodes and grid lines and grid lines
 spaces = [[None for c in range(19)] for r in range(19)]
 for r in range(19):
 	for c in range(19):
@@ -42,6 +42,7 @@ def hide_chip_placer(event):
 
 def handle_motion(event):
 	# if statements prevent hoverer from snapping to spaces outside the grid
+    # if statements prevent hoverer from snapping to spaces outside the grid
 	if event.x < 30:
 		snapped_x = 30
 	elif event.x > 570:
