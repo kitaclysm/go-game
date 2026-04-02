@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from node_space import SpaceType, SpaceNode
 
 grid_size = 30
 canvas_size = 600
@@ -24,6 +25,12 @@ for i in range(1, 20):
 	# vertical
 	canvas.create_line(imult, grid_size, imult, (canvas_size - grid_size))
 
+# create space_nodes
+spaces = [[None for c in range(19)] for r in range(19)]
+for r in range(19):
+    for c in range(19):
+        spaces[r][c] = SpaceNode(row=r, col=c)
+
 # create chip indicator and hide
 chip_hoverer = canvas.create_oval(0,0,((grid_size / 2) - 4),((grid_size / 2) - 4))
 # alternate chip indicator, rounded circle instead of oval
@@ -36,16 +43,18 @@ def show_chip_placer(event):
 def hide_chip_placer(event):
     canvas.itemconfig(chip_hoverer, state='hidden')
 
-
 def handle_motion(event):
+    if event.x < 15 or event.x > 585 or event.y < 15 or event.y > 585:
+        hide_chip_placer(event)
+    else:
+        show_chip_placer(event)
     snapped_x = ((event.x + (grid_size / 2)) // grid_size) * grid_size
     x1 = snapped_x - ((grid_size / 2) - 4)
     x2 = snapped_x + ((grid_size / 2) - 4)
     snapped_y = ((event.y + (grid_size / 2)) // grid_size) * grid_size
     y1 = snapped_y - ((grid_size / 2) - 4)
     y2 = snapped_y + ((grid_size / 2) - 4)
-    if event.x >= 15 and event.x <= 585 and event.y >= 15 and event.y <= 585:
-        canvas.coords(chip_hoverer, x1, y1, x2, y2)
+    canvas.coords(chip_hoverer, x1, y1, x2, y2)
     # print(f"snapped_x: {snapped_x}, snapped_y: {snapped_y}")
 
 def handle_click(event):
@@ -54,6 +63,6 @@ def handle_click(event):
 	print(f"Clicked at {event.x}, {event.y}")
 
 canvas.bind('<Button-1>', handle_click)
-canvas.bind('<Enter>', show_chip_placer)
+# canvas.bind('<Enter>', show_chip_placer)
 canvas.bind('<Leave>', hide_chip_placer)
 canvas.bind('<Motion>', handle_motion)
