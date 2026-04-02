@@ -63,7 +63,7 @@ def handle_motion(event):
 	canvas.coords(chip_hoverer, x1, y1, x2, y2)
 	# print(f"snapped_x: {snapped_x}, snapped_y: {snapped_y}")
 
-def handle_click(event):
+def handle_click(event, player="black"):
 	# if statements prevent hoverer from snapping to spaces outside the grid
 	if event.x < 30:
 		snapped_x = 30
@@ -80,7 +80,9 @@ def handle_click(event):
 	
 	col = int(snapped_x // 30)
 	row = int(snapped_y // 30)
-	print(f"Clicked at col: {col}, row: {row}")
+	# print(f"Clicked at col: {col}, row: {row}")
+	# not sure what to do with this one
+	player = "black" if player == "white" else "white"
 	return (col, row)
 
 canvas.bind('<Button-1>', handle_click)
